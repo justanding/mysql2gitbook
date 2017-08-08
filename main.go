@@ -267,8 +267,6 @@ func createGitbook(tables map[string]Table) {
 }
 
 func writeFile(filename, content string) error {
-
-	fmt.Println(filename)
 	realfn := baseName + filename
 
 	f, err := os.Create(realfn)
@@ -278,7 +276,6 @@ func writeFile(filename, content string) error {
 	defer f.Close()
 
 	_, err =f.WriteString(content)
-
 	return err
 }
 
