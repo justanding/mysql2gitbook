@@ -1,0 +1,5 @@
+vendor/*
+data/*
+glide.yaml
+glide.lock
+.idea/*
