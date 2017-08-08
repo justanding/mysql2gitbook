@@ -227,6 +227,7 @@ func filterDuplicate(tables []string) (map[string]Table, error){
 func createGitbook(tables map[string]Table) {
 
 	readme := "### 目录 \n\n"
+	summary := "* [目录](README.md)\n"
 	for _, v := range tables {
 		filename := v.Name + ".md"
 
@@ -235,7 +236,9 @@ func createGitbook(tables map[string]Table) {
 			linkName = v.Comment
 		}
 
-		readme += "[" + linkName + "](" + filename + ")\n"
+		list := "* [" + linkName + "](" + filename + ")\n"
+		readme += list
+		summary += "    " + list
 
 		s := "## " + v.Name + "\n"
 		if len(v.Comment) == 0 {
@@ -262,7 +265,7 @@ func createGitbook(tables map[string]Table) {
 
 	}
 
-	writeFile("SUMMARY.md", readme)
+	writeFile("SUMMARY.md", summary)
 	writeFile("README.md", readme)
 }
 
