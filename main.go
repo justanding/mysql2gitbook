@@ -16,7 +16,10 @@ type TableColumns struct {
 	Field string
 	Type string
 	Null string
+	Default string
+	Key string
 	Comment string
+	Extra string
 }
 
 // 数据表
@@ -164,8 +167,11 @@ func (t *Table) showColumns() error {
 		column := &TableColumns{
 			Field:Field,
 			Type:Type,
+			Default:Default.(string),
+			Key:Key,
 			Null:Null,
 			Comment:Comment,
+			Extra:Extra,
 		}
 		columns = append(columns, *column)
 	}
@@ -249,10 +255,17 @@ func createGitbook(tables map[string]Table) {
 
 		s += "### 表结构说明 \n\n"
 
-		s += "|字段名|类型|Null|注释\n"
-		s += "|-----|----|----|---\n"
+		s += "|Field|Type|Key|Default|Null|Comment|Extra\n"
+		s += "|-----|----|---|-------|----|---|-----\n"
 		for _, c := range v.Columns {
-			s += "|" + c.Field + "|" + c.Type + "|" + c.Null + "|" + c.Comment + "\n"
+			s += "| " +
+				c.Field + " | " +
+				c.Type + " | " +
+				c.Key + " | " +
+				c.Default + " | " +
+				c.Null + " | " +
+				c.Comment + " | " +
+				c.Extra + "\n"
 		}
 		s += "\n"
 
