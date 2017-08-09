@@ -164,10 +164,20 @@ func (t *Table) showColumns() error {
 			return  err
 		}
 
+		d := ""
+		switch value := Default.(type) {
+		case int:
+			d = strconv.Itoa(value)
+		case string:
+			d = value
+		default:
+			d = ""
+		}
+
 		column := &TableColumns{
 			Field:Field,
 			Type:Type,
-			Default:Default.(string),
+			Default:d,
 			Key:Key,
 			Null:Null,
 			Comment:Comment,
