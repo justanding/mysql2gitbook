@@ -164,14 +164,18 @@ func (t *Table) showColumns() error {
 			return  err
 		}
 
-		d := ""
+		var d string
 		switch value := Default.(type) {
-		case int:
-			d = strconv.Itoa(value)
 		case string:
 			d = value
+		case int:
+			d = strconv.Itoa(value)
+		case []uint8:
+			for _, i := range value {
+				d += string(i)
+			}
 		default:
-			d = ""
+			d = fmt.Sprint(value)
 		}
 
 		column := &TableColumns{
@@ -265,8 +269,8 @@ func createGitbook(tables map[string]Table) {
 
 		s += "### 表结构说明 \n\n"
 
-		s += "|Field|Type|Key|Default|Null|Comment|Extra\n"
-		s += "|-----|----|---|-------|----|---|-----\n"
+		s += "|Field|Type|Key|Default|Null|Comment|Extra|\n"
+		s += "|-----|----|---|-------|----|-------|-----|\n"
 		for _, c := range v.Columns {
 			s += "| " +
 				c.Field + " | " +
@@ -275,7 +279,7 @@ func createGitbook(tables map[string]Table) {
 				c.Default + " | " +
 				c.Null + " | " +
 				c.Comment + " | " +
-				c.Extra + "\n"
+				c.Extra + " |\n"
 		}
 		s += "\n"
 
