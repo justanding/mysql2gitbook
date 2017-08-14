@@ -9,3 +9,6 @@ example:
     
     
     
+gitbook:
+
+    docker run -v $PWD/data/{db}:/srv/gitbook -p 4000:4000 yanqd0/gitbook
