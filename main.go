@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"flag"
-	"log"
 	"database/sql"
-	"regexp"
-	"os"
+	"flag"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
+	"os"
+	"regexp"
 	"strconv"
 )
 
@@ -146,7 +146,8 @@ func (t *Table)showTableStatus() error {
 func (t *Table) showColumns() error {
 	var columns []TableColumns
 
-	rows, err := db.Query("show full columns from " + t.RealName)
+	table := "`" + *dbName + "`.`" + t.RealName +"`"
+	rows, err := db.Query("show full columns from " + table)
 	if err != nil {
 		 return err
 	}
@@ -196,19 +197,30 @@ func (t *Table) showColumns() error {
 
 func (t *Table) showCreateTable() error {
 
-	rows, err := db.Query("show create table " + t.RealName)
+	table := "`" + *dbName + "`.`" + t.RealName +"`"
+	rows, err := db.Query("show create table " + table)
 	if err != nil {
 		return err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var Name, CreateSql string
+		var Name, CreateSql, character, collation string
 
-		err := rows.Scan(&Name, &CreateSql)
-		if err != nil {
-			 return err
+		cols, _ := rows.Columns()
+		length := len(cols)
+		if (length == 2) {
+			err := rows.Scan(&Name, &CreateSql)
+			if err != nil {
+				return err
+			}
+		} else if (length == 4) {
+			err := rows.Scan(&Name, &CreateSql, &character, &collation)
+			if err != nil {
+				return err
+			}
 		}
+
 		t.CreateSql = CreateSql
 		return nil
 	}
